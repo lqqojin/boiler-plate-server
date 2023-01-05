@@ -1,15 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const logger_1 = require("../../utils/logger");
-class IndexController {
-    index(req, res, next) {
+var IndexController = /** @class */ (function () {
+    function IndexController() {
+    }
+    IndexController.prototype.index = function (req, res, next) {
         try {
-            logger_1.logger.info('IndexController');
-            res.sendStatus(200);
+            return res.sendStatus(200);
         }
         catch (error) {
             next(error);
         }
-    }
-}
+    };
+    return IndexController;
+}());
 exports.default = IndexController;

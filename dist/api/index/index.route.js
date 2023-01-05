@@ -3,17 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const index_controller_1 = __importDefault(require("../index/index.controller"));
-class IndexRoute {
-    constructor() {
+var express_1 = require("express");
+var index_controller_1 = __importDefault(require("../index/index.controller"));
+var IndexRoute = /** @class */ (function () {
+    function IndexRoute() {
         this.path = '/';
         this.router = (0, express_1.Router)();
         this.indexController = new index_controller_1.default();
         this.initializeRoutes();
     }
-    initializeRoutes() {
-        this.router.get(`/`, this.indexController.index);
-    }
-}
+    IndexRoute.prototype.initializeRoutes = function () {
+        this.router.get("/", this.indexController.index);
+    };
+    return IndexRoute;
+}());
 exports.default = IndexRoute;

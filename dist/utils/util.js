@@ -7,7 +7,7 @@ exports.isEmpty = void 0;
  * @returns {Boolean} true & false
  * @description 값 유효성 체크
  */
-const isEmpty = (value) => {
+var isEmpty = function (value) {
     if (value === null) {
         return true;
     }

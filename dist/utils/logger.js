@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.stream = exports.logger = void 0;
-const fs_1 = require("fs");
-const path_1 = require("path");
-const winston_1 = __importDefault(require("winston"));
-const winston_daily_rotate_file_1 = __importDefault(require("winston-daily-rotate-file"));
-const _config_1 = require("../config");
+var fs_1 = require("fs");
+var path_1 = require("path");
+var winston_1 = __importDefault(require("winston"));
+var winston_daily_rotate_file_1 = __importDefault(require("winston-daily-rotate-file"));
+var _config_1 = require("../config");
 // logs dir
-const logDir = (0, path_1.join)(__dirname, _config_1.LOG_DIR);
-const config = {
+var logDir = (0, path_1.join)(__dirname, _config_1.LOG_DIR);
+var config = {
     levels: {
         // 숫자가 낮을 수록 우선순위가 높습니다.
         error: 0,
@@ -32,12 +32,15 @@ if (!(0, fs_1.existsSync)(logDir)) {
     (0, fs_1.mkdirSync)(logDir);
 }
 // Define log format
-const logFormat = winston_1.default.format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`);
+var logFormat = winston_1.default.format.printf(function (_a) {
+    var timestamp = _a.timestamp, level = _a.level, message = _a.message;
+    return "".concat(timestamp, " ").concat(level, ": ").concat(message);
+});
 /*
  * Log Level
  * error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
  */
-const logger = winston_1.default.createLogger({
+var logger = winston_1.default.createLogger({
     levels: config.levels,
     format: winston_1.default.format.combine(winston_1.default.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
@@ -48,7 +51,7 @@ const logger = winston_1.default.createLogger({
             level: 'error',
             datePattern: 'YYYY-MM-DD',
             dirname: logDir + '/error',
-            filename: `%DATE%.log`,
+            filename: "%DATE%.log",
             maxFiles: 30,
             handleExceptions: true,
             json: false,
@@ -59,7 +62,7 @@ const logger = winston_1.default.createLogger({
             level: 'debug',
             datePattern: 'YYYY-MM-DD',
             dirname: logDir + '/debug',
-            filename: `%DATE%.log`,
+            filename: "%DATE%.log",
             maxFiles: 30,
             json: false,
             zippedArchive: true,
@@ -72,8 +75,8 @@ logger.add(new winston_1.default.transports.Console({
     // winston.format.prettyPrint(),
     winston_1.default.format.splat(), winston_1.default.format.colorize({ all: true })),
 }));
-const stream = {
-    write: (message) => {
+var stream = {
+    write: function (message) {
         logger.info(message.substring(0, message.lastIndexOf('\n')));
     },
 };

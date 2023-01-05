@@ -9,19 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const typegoose_1 = require("@typegoose/typegoose");
-let User = class User {
-};
-__decorate([
-    (0, typegoose_1.prop)({ type: String, required: true, unique: true }),
-    __metadata("design:type", Object)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, typegoose_1.prop)({ type: String, required: true }),
-    __metadata("design:type", Object)
-], User.prototype, "password", void 0);
-User = __decorate([
-    (0, typegoose_1.modelOptions)({ schemaOptions: { collection: 'user', timestamps: true } })
-], User);
-const UserModel = (0, typegoose_1.getModelForClass)(User);
+var typegoose_1 = require("@typegoose/typegoose");
+var User = /** @class */ (function () {
+    function User() {
+    }
+    __decorate([
+        (0, typegoose_1.prop)({ type: String, required: true, unique: true }),
+        __metadata("design:type", Object)
+    ], User.prototype, "email", void 0);
+    __decorate([
+        (0, typegoose_1.prop)({ type: String, required: true }),
+        __metadata("design:type", Object)
+    ], User.prototype, "password", void 0);
+    User = __decorate([
+        (0, typegoose_1.modelOptions)({ schemaOptions: { collection: 'user', timestamps: true } })
+    ], User);
+    return User;
+}());
+var UserModel = (0, typegoose_1.getModelForClass)(User);
 exports.default = UserModel;

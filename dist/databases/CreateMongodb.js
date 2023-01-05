@@ -39,62 +39,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersService = void 0;
-var HttpException_1 = require("../../exceptions/HttpException");
-var util_1 = require("../../utils/util");
-var users_model_1 = __importDefault(require("../users/users.model"));
-var logger_1 = require("../../utils/logger");
-var UsersService = /** @class */ (function () {
-    function UsersService() {
+exports.CreateMongodb = void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
+var _config_1 = require("../config");
+var logger_1 = require("../utils/logger");
+var CreateMongodb = /** @class */ (function () {
+    function CreateMongodb() {
+        this.mongodbConnection = "mongodb://".concat(_config_1.DB_USERNAME, ":").concat(_config_1.DB_PASSWORD, "@").concat(_config_1.DB_HOST, ":").concat(_config_1.DB_PORT, "/").concat(_config_1.DB_DATABASE, "?connectTimeoutMS=1000&authSource=").concat(_config_1.DB_DATABASE);
+        this.env = _config_1.NODE_ENV;
+        this.mongodbUrl = _config_1.MONGO_URL;
     }
-    UsersService.prototype.findUserById = function (userId) {
+    CreateMongodb.prototype.connectToDB = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var users, error_1;
+            var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if ((0, util_1.isEmpty)(userId))
-                            throw new HttpException_1.HttpException(400, 'User Id is empty');
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, users_model_1.default.findOne({
-                                email: userId,
-                            })];
-                    case 2:
-                        users = _a.sent();
-                        if (users)
-                            logger_1.logger.info('test1');
-                        return [2 /*return*/, users];
-                    case 3:
-                        error_1 = _a.sent();
-                        throw new HttpException_1.HttpException(409, "user doesn't exist");
-                    case 4: return [2 /*return*/];
-                }
+                mongoose_1.default.set('strictQuery', true);
+                if (this.env !== 'production')
+                    mongoose_1.default.set('debug', true);
+                return [2 /*return*/, new Promise(function (resolve) {
+                        mongoose_1.default
+                            .connect(_this.mongodbConnection, {
+                            serverSelectionTimeoutMS: 3000,
+                            // server: { socket_options: { socketTimeoutMS: 3000 } },
+                        })
+                            .then(function () {
+                            logger_1.logger.info('connected Mongodb');
+                            resolve(true);
+                        });
+                    })];
             });
         });
     };
-    UsersService.prototype.createUser = function (userData) {
-        return __awaiter(this, void 0, void 0, function () {
-            var error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        logger_1.logger.info(userData);
-                        return [4 /*yield*/, users_model_1.default.create(userData)];
-                    case 1: 
-                    // if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
-                    return [2 /*return*/, _a.sent()];
-                    case 2:
-                        error_2 = _a.sent();
-                        logger_1.logger.error(error_2);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return UsersService;
+    return CreateMongodb;
 }());
-exports.UsersService = UsersService;
+exports.CreateMongodb = CreateMongodb;

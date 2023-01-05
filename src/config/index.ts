@@ -12,4 +12,9 @@ export const {
   ORIGIN,
   LOG_DIR,
   LOG_FORMAT,
+  REDIS_IP,
+  REDIS_PORT,
+  REDIS_PW,
+  MONGO_URL,
+  SOE,
 } = process.env;

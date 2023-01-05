@@ -35,66 +35,59 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersService = void 0;
-var HttpException_1 = require("../../exceptions/HttpException");
-var util_1 = require("../../utils/util");
-var users_model_1 = __importDefault(require("../users/users.model"));
-var logger_1 = require("../../utils/logger");
-var UsersService = /** @class */ (function () {
-    function UsersService() {
+exports.AiStartController = void 0;
+var AiStart_service_1 = require("../aiStart/AiStart.service");
+var AiStartController = /** @class */ (function () {
+    function AiStartController() {
     }
-    UsersService.prototype.findUserById = function (userId) {
+    AiStartController.prototype.voiceStart = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var projectId, callid, startData, aiStartService, _a, status_1, data, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        if ((0, util_1.isEmpty)(userId))
-                            throw new HttpException_1.HttpException(400, 'User Id is empty');
-                        _a.label = 1;
+                        _b.trys.push([0, 2, , 3]);
+                        projectId = req.params.projectId;
+                        callid = req.body.callid;
+                        startData = { userKey: callid };
+                        aiStartService = new AiStart_service_1.AiStartService(res, projectId, startData);
+                        return [4 /*yield*/, aiStartService.soeLogin()];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, users_model_1.default.findOne({
-                                email: userId,
-                            })];
+                        _a = _b.sent(), status_1 = _a.status, data = _a.data;
+                        return [2 /*return*/, res.status(200).json({ status: status_1, data: data })];
                     case 2:
-                        users = _a.sent();
-                        if (users)
-                            logger_1.logger.info('test1');
-                        return [2 /*return*/, users];
-                    case 3:
-                        error_1 = _a.sent();
-                        throw new HttpException_1.HttpException(409, "user doesn't exist");
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    UsersService.prototype.createUser = function (userData) {
-        return __awaiter(this, void 0, void 0, function () {
-            var error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        logger_1.logger.info(userData);
-                        return [4 /*yield*/, users_model_1.default.create(userData)];
-                    case 1: 
-                    // if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
-                    return [2 /*return*/, _a.sent()];
-                    case 2:
-                        error_2 = _a.sent();
-                        logger_1.logger.error(error_2);
+                        error_1 = _b.sent();
+                        next(error_1);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    return UsersService;
+    AiStartController.prototype.chatStart = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, projectId, workspaceId, startData, aiStartService, result, error_2;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        _a = req.params, projectId = _a.projectId, workspaceId = _a.workspaceId;
+                        startData = req.body;
+                        aiStartService = new AiStart_service_1.AiStartService(res, projectId, startData, workspaceId);
+                        return [4 /*yield*/, aiStartService.soeLogin()];
+                    case 1:
+                        result = _b.sent();
+                        return [2 /*return*/, res.status(200).json({ status: true, data: result })];
+                    case 2:
+                        error_2 = _b.sent();
+                        next(error_2);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return AiStartController;
 }());
-exports.UsersService = UsersService;
+exports.AiStartController = AiStartController;

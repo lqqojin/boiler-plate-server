@@ -1,10 +1,13 @@
 import { App } from '@/App';
+import { logger } from '@utils/logger';
 import validateEnv from '@utils/validateEnv';
 import usersRoute from '@api/users/users.route';
 import IndexRoute from '@api/index/index.route';
-import { logger } from '@utils/logger';
+import { AiStartRoute } from '@api/aiStart/AiStart.route';
+
 validateEnv();
-const app = new App([new IndexRoute(), new usersRoute()]);
+
+const app = new App([new IndexRoute(), new usersRoute(), new AiStartRoute()]);
 
 app.listen();
 
