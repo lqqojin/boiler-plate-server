@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import winston from 'winston';
+import winston, { format } from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
 import { LOG_DIR } from '@config';
+import util from 'util';
 
 // logs dir
 const logDir: string = join(__dirname, LOG_DIR as string);
@@ -19,8 +20,8 @@ const config = {
     // 각각의 레벨에 대한 색상을 지정
     error: 'red',
     debug: 'blue',
-    warn: 'yellow',
-    info: 'green',
+    warn: 'green',
+    info: 'yellow',
   },
 };
 
@@ -31,18 +32,25 @@ if (!existsSync(logDir)) {
 }
 
 // Define log format
-const logFormat = winston.format.printf(
-  ({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`,
-);
+const logFormat = format.printf(({ timestamp, level, message }) => {
+  level = level.toUpperCase();
+  if (typeof message === 'object') {
+    return util
+      .format('%o', message)
+      .trim()
+      .split('\n')
+      .map(line => {
+        return `${timestamp} [${level}]: ${line}`;
+      })
+      .join('\n');
+  }
+  return `${timestamp} [${level}]: ${message}`;
+});
 
-/*
- * Log Level
- * error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
- */
 const logger = winston.createLogger({
   levels: config.levels,
-  format: winston.format.combine(
-    winston.format.timestamp({
+  format: format.combine(
+    format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
     logFormat,
@@ -61,7 +69,6 @@ const logger = winston.createLogger({
     }),
     // debug log setting
     new winstonDaily({
-      level: 'debug',
       datePattern: 'YYYY-MM-DD',
       dirname: logDir + '/debug', // log file /logs/debug/*.log in save
       filename: `%DATE%.log`,
@@ -74,17 +81,7 @@ const logger = winston.createLogger({
 
 logger.add(
   new winston.transports.Console({
-    format: winston.format.combine(
-      // winston.format.prettyPrint(),
-      winston.format.splat(),
-      winston.format.colorize({ all: true }),
-      // winston.format.printf(info => {
-      //   if (typeof info.message === 'object') {
-      //     info.message = JSON.stringify(info.message, null, 2);
-      //   }
-      //   return info.message;
-      // }),
-    ),
+    format: format.combine(format.splat(), format.colorize({ all: true })),
   }),
 );
 

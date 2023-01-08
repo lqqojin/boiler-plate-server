@@ -42,7 +42,14 @@ export class App {
   }
 
   private initializeMiddlewares() {
-    this.app.use(morgan(this.logFormat, { stream }));
+    this.app.use(
+      morgan(
+        '[:method] [:url] [:response-time ms] [HTTP/:http-version] [statusCode::status] [content-length::res[content-length]]',
+        {
+          stream,
+        },
+      ),
+    );
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(helmet());
     this.app.use(compression());
@@ -60,8 +67,7 @@ export class App {
 
   private async connectDatabases() {
     const createMongodb = new CreateMongodb();
-    const createRedis = CreateRedis.getInstance();
+    CreateRedis.getInstance(); // 싱글턴 객체 생성
     await createMongodb.connectToDB();
-    logger.info(createRedis);
   }
 }

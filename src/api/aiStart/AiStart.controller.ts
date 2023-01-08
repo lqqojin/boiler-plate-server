@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AiStartService } from '@api/aiStart/AiStart.service';
 import { AiStartInterface } from '@api/aiStart/AiStart.interface';
+import { logger } from '@utils/logger';
 
 export class AiStartController {
   public async voiceStart(req: Request, res: Response, next: NextFunction) {
@@ -9,8 +10,9 @@ export class AiStartController {
       const { callid } = req.body;
       const startData: AiStartInterface = { userKey: callid };
       const aiStartService = new AiStartService(res, projectId, startData);
-      const { status, data } = await aiStartService.soeLogin();
-      return res.status(200).json({ status, data });
+      const result = await aiStartService.soeLogin();
+      logger.warn(result.data);
+      return res.status(200).json({ status: result.status, data: result.data });
     } catch (error) {
       next(error);
     }

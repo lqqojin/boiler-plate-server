@@ -38,26 +38,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AiStartController = void 0;
 var AiStart_service_1 = require("../aiStart/AiStart.service");
+var CreateRedis_1 = require("../../databases/CreateRedis");
+var logger_1 = require("../../utils/logger");
 var AiStartController = /** @class */ (function () {
     function AiStartController() {
     }
     AiStartController.prototype.voiceStart = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var projectId, callid, startData, aiStartService, _a, status_1, data, error_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var redis, projectId, callid, startData, aiStartService, result, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 2, , 3]);
+                        redis = CreateRedis_1.CreateRedis.getInstance().redis;
                         projectId = req.params.projectId;
                         callid = req.body.callid;
                         startData = { userKey: callid };
                         aiStartService = new AiStart_service_1.AiStartService(res, projectId, startData);
                         return [4 /*yield*/, aiStartService.soeLogin()];
                     case 1:
-                        _a = _b.sent(), status_1 = _a.status, data = _a.data;
-                        return [2 /*return*/, res.status(200).json({ status: status_1, data: data })];
+                        result = _a.sent();
+                        logger_1.logger.warn(result.data);
+                        return [2 /*return*/, res.status(200).json({ status: result.status, data: result.data })];
                     case 2:
-                        error_1 = _b.sent();
+                        error_1 = _a.sent();
                         next(error_1);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

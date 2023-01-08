@@ -83,7 +83,9 @@ var App = /** @class */ (function () {
         return this.app;
     };
     App.prototype.initializeMiddlewares = function () {
-        this.app.use((0, morgan_1.default)(this.logFormat, { stream: logger_1.stream }));
+        this.app.use((0, morgan_1.default)('[:method] [:url] [:response-time ms] [HTTP/:http-version] [statusCode::status] [content-length::res[content-length]]', {
+            stream: logger_1.stream,
+        }));
         this.app.use((0, cors_1.default)({ origin: _config_1.ORIGIN, credentials: _config_1.CREDENTIALS }));
         this.app.use((0, helmet_1.default)());
         this.app.use((0, compression_1.default)());
@@ -100,16 +102,15 @@ var App = /** @class */ (function () {
     };
     App.prototype.connectDatabases = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var createMongodb, createRedis;
+            var createMongodb;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         createMongodb = new CreateMongodb_1.CreateMongodb();
-                        createRedis = CreateRedis_1.CreateRedis.getInstance();
+                        CreateRedis_1.CreateRedis.getInstance(); // 싱글턴 객체 생성
                         return [4 /*yield*/, createMongodb.connectToDB()];
                     case 1:
                         _a.sent();
-                        logger_1.logger.info(createRedis);
                         return [2 /*return*/];
                 }
             });

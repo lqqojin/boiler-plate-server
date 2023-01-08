@@ -25,7 +25,7 @@ export class CreateRedis {
 
   public static getInstance() {
     if (!CreateRedis.instance) {
-      CreateRedis.instance = new CreateRedis('싱글턴 객체');
+      CreateRedis.instance = new CreateRedis('디자인패턴: singleton 객체 생성');
     }
     return CreateRedis.instance;
   }
